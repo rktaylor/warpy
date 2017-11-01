@@ -1,0 +1,403 @@
+
+
+
+def find_edge(map_array, cx, cy, cn):
+    """
+    Modifies the zeros_array such that border cells for your continent = 1.
+    Can't actually return anything since it's recursive and idk how to handle returns
+    ...actually I could probably
+
+    :param copy_of_map:
+    :param cx:
+    :param cy:
+    :param cn:
+    :return:
+    """
+    edges = []
+    # Am I crazy, or does this accurately test both (1) and (2) cheap af?
+    try:
+        if map_array[cx, cy] != cn:
+            return
+    except IndexError:
+        return
+    neighbors = [[cx+1, cy],
+                 [cx-1, cy],
+                 [cx, cy+1],
+                 [cx, cy-1]]
+    # If I build this to handle semi-populated maps, I need to handle Nones. TODO
+    are_ocean_or_other = [map_array[tile[0], tile[1]] != cn for tile in neighbors]
+    if any(are_ocean_or_other):
+        edges.append([cx, cy])
+        print(edges)
+        print("appending [cx,cy] = {},{}".format(cx,cy))
+    other_edges = [find_edge(map_array, N[0], N[1], cn) for N in neighbors]
+    edges += [others for others in other_edges if others is not None]
+    return edges
+e = find_edge(p.values[0:10][0:10], 1,1,1)
+
+
+
+def find_edge(map_array, output_array, cx, cy, cn):
+    """
+    Modifies the zeros_array such that border cells for your continent = 1.
+    Can't actually return anything since it's recursive and idk how to handle returns
+    ...actually I could probably
+
+    :param copy_of_map:
+    :param cx:
+    :param cy:
+    :param cn:
+    :return:
+    """
+    # Am I crazy, or does this accurately test both (1) and (2) cheap af?
+    print("--------------START FUNCTION CALL--------------")
+    try:
+        print("Start TRY")
+        if map_array[cx, cy] != cn:
+            print("map_array[cx,cy] != cn")
+            return
+        if cx < 0 or cy < 0:  # non-periodic!
+            print("cx or cy less than 1")
+            return
+    except IndexError:
+        print("cx,cy not on screen")
+        return
+    neighbors = [[cx+1, cy],
+                 [cx-1, cy],
+                 [cx, cy+1],
+                 [cx, cy-1]]
+    print("Neighbors are:")
+    print(neighbors)
+    # If I build this to handle semi-populated maps, I need to handle Nones. TODO
+    are_ocean_or_other = [map_array[tile[0], tile[1]] != cn for tile in neighbors]
+    print("Oceans:")
+    print(are_ocean_or_other)
+    if any(are_ocean_or_other):
+        print("assigning = 1")
+        output_array[cx, cy] = 1
+    # else:
+    #     return
+    for N in neighbors:
+        print("Recursive layer on N = {}".format(str(N)))
+        find_edge(map_array, output_array, N[0], N[1], cn)
+    print("--------------END--------------")
+    return
+
+
+
+def find_edge(map_array, output_array, cx, cy, cn):
+    """
+    Modifies the zeros_array such that border cells for your continent = 1.
+    Can't actually return anything since it's recursive and idk how to handle returns
+    ...actually I could probably
+
+    :param copy_of_map:
+    :param cx:
+    :param cy:
+    :param cn:
+    :return:
+    """
+    print("--------------start {},{}---------".format(cx,cy))
+    # Am I crazy, or does this accurately test both (1) and (2) cheap af?
+    if output_array[cx, cy] == 1:
+        print("Output array already populated, bailing.")
+        return  # return if we've already labeled this cell
+    if cx < 0 or cy < 0:
+        print("Negative indices, bailing.")
+        return
+    try:
+        print("Trying to access pixel")
+        _ = map_array[cx, cy]  # just access -- I don't think 'returns' work in tries?
+    except IndexError:
+        print("Couldn't, so it's off screen. Bailing")
+        return
+    if map_array[cx, cy] != cn:
+        print("Pixel not the right continent, bailing.")
+        return
+    neighbors = [[cx+1, cy],
+                 [cx-1, cy],
+                 [cx, cy+1],
+                 [cx, cy-1]]
+    # If I build this to handle semi-populated maps, I need to handle Nones. TODO
+    are_ocean_or_other = [map_array[tile[0], tile[1]] != cn for tile in neighbors]
+    print("Neighbors are ocean:")
+    print(are_ocean_or_other)
+    if any(are_ocean_or_other):
+        print("Assigning...")
+        output_array[cx, cy] = 1
+    for N in neighbors:
+        print("Recurring for {}".format(str(N)))
+        find_edge(map_array, output_array, N[0], N[1], cn)
+    return
+
+find_edge(maparr, outarr, 1,1,1)
+
+
+def find_edge2(map_array, seen_before, output_array, cx, cy, cn):
+    print("-------------Starting for {},{}--------".format(cx, cy))
+    C1 = output_array[cx, cy] == 1
+    C2 = cx < 0 or cy < 0
+    C3 = map_array[cx, cy] != cn
+    C4 = [cx,cy] in seen_before
+    try:
+        if C1 or C2 or C3 or C4:
+            print("NO RECURSION SHOULD HAPPEN IF YOU SEE THIS")
+            return
+        else:
+            seen_before.append([cx, cy])
+            neighbors = [[cx+1, cy],
+                         [cx-1, cy],
+                         [cx, cy+1],
+                         [cx, cy-1]]
+            are_different = [map_array[t[0], t[1]] != cn for t in neighbors]
+            if any(are_different):
+                output_array[cx, cy] = 1
+            for N in neighbors:
+                print("PARENT {},{} is Recurring for {}".format(cx, cy, str(N)))
+                find_edge2(map_array, seen_before, output_array, N[0], N[1], cn)
+    except IndexError:
+        print("Index error reached")
+        return
+    print("End?")
+
+-----------
+
+def find_edge(map_array, output_array, cx, cy, cn):
+    """
+    Modifies the zeros_array such that border cells for your continent = 1.
+    Can't actually return anything since it's recursive and idk how to handle returns
+    ...actually I could probably
+
+    :param copy_of_map:
+    :param cx:
+    :param cy:
+    :param cn:
+    :return:
+    """
+    print("--------------start {},{}---------".format(cx,cy))
+    # Am I crazy, or does this accurately test both (1) and (2) cheap af?
+    if output_array[cx, cy] == 1:
+        print("Output array already populated, bailing.")
+        return  # return if we've already labeled this cell
+    if cx < 0 or cy < 0:
+        print("Negative indices, bailing.")
+        return
+    try:
+        print("Trying to access pixel")
+        _ = map_array[cx, cy]  # just access -- I don't think 'returns' work in tries?
+    except IndexError:
+        print("Couldn't, so it's off screen. Bailing")
+        return
+    if map_array[cx, cy] != cn:
+        print("Pixel not the right continent, bailing.")
+        return
+    neighbors = [[cx+1, cy],
+                 [cx-1, cy],
+                 [cx, cy+1],
+                 [cx, cy-1]]
+    # If I build this to handle semi-populated maps, I need to handle Nones. TODO
+    are_ocean_or_other = [map_array[tile[0], tile[1]] != cn for tile in neighbors]
+    print("Neighbors are ocean:")
+    print(are_ocean_or_other)
+    if any(are_ocean_or_other):
+        print("Assigning...")
+        output_array[cx, cy] = 1
+    for N in neighbors:
+        print("Recurring for {}".format(str(N)))
+        find_edge(map_array, output_array, N[0], N[1], cn)
+    return
+
+find_edge(maparr, outarr, 1,1,1)
+
+def find_edge_recur(map_array, seen_before, output_array, cx, cy, cn):
+    map_size = map_array.shape
+    C1 = output_array[cx, cy] == 1
+    C2 = cx < 0 or cy < 0
+    C3 = map_array[cx, cy] != cn
+    C4 = [cx, cy] in seen_before
+    try:
+        if C1 or C2 or C3 or C4:
+            return
+        else:
+            seen_before.append([cx, cy])
+            # I need to filter neighbors to exclude negative indices and
+            # indices that would throw IndexErrors (because those are getting caught
+            # hence no correct evaluations on the last row and column.
+            neighboring = [[cx+1, cy],
+                           [cx-1, cy],
+                           [cx, cy+1],
+                           [cx, cy-1]]
+            neighbors_to_check = []
+            for N in neighboring:
+                if N[0] < map_size[0] and N[1] < map_size[1]:
+                    if N[0] > 0 and N[1] > 0:
+                        neighbors_to_check.append(N)
+            # this bit should not be periodic...
+            are_different = [map_array[t[0], t[1]] != cn for t in neighbors_to_check]
+            if any(are_different):
+                output_array[cx, cy] = 1
+            for N in neighboring:
+                find_edge_recur(map_array, seen_before, output_array, N[0], N[1], cn)
+    except IndexError:
+        return
+
+
+
+
+# GIVING UP FOR NOW
+def determine_edges(tile_array):
+    """
+    Takes in a list of tile indices and returns which indices are edgy.
+
+
+    :param tile_array:
+    :return:
+    """
+    for tile in tile_array:
+        neighbors = 1
+    pass
+
+
+def find_edge(map_array, output_array, cx, cy, cn):
+    """
+    Modifies the zeros_array such that border cells for your continent = 1.
+    Can't actually return anything since it's recursive and idk how to handle returns
+    ...actually I could probably
+
+    :param copy_of_map:
+    :param cx:
+    :param cy:
+    :param cn:
+    :return:
+    """
+    print("--------------start {},{}---------".format(cx,cy))
+    # Am I crazy, or does this accurately test both (1) and (2) cheap af?
+    if output_array[cx, cy] == 1:
+        print("Output array already populated, bailing.")
+        return  # return if we've already labeled this cell
+    if cx < 0 or cy < 0:
+        print("Negative indices, bailing.")
+        return
+    try:
+        print("Trying to access pixel")
+        _ = map_array[cx, cy]  # just access -- I don't think 'returns' work in tries?
+    except IndexError:
+        print("Couldn't, so it's off screen. Bailing")
+        return
+    if map_array[cx, cy] != cn:
+        print("Pixel not the right continent, bailing.")
+        return
+    neighbors = [[cx+1, cy],
+                 [cx-1, cy],
+                 [cx, cy+1],
+                 [cx, cy-1]]
+    # If I build this to handle semi-populated maps, I need to handle Nones. TODO
+    are_ocean_or_other = [map_array[tile[0], tile[1]] != cn for tile in neighbors]
+    print("Neighbors are ocean:")
+    print(are_ocean_or_other)
+    if any(are_ocean_or_other):
+        print("Assigning...")
+        output_array[cx, cy] = 1
+    for N in neighbors:
+        print("Recurring for {}".format(str(N)))
+        find_edge(map_array, output_array, N[0], N[1], cn)
+    return
+
+find_edge(maparr, outarr, 1,1,1)
+
+def find_edge_recur(map_array, seen_before, output_array, cx, cy, cn):
+    map_size = map_array.shape
+    C1 = output_array[cx, cy] == 1
+    C2 = cx < 0 or cy < 0
+    C3 = map_array[cx, cy] != cn
+    C4 = [cx, cy] in seen_before
+    try:
+        if C1 or C2 or C3 or C4:
+            return
+        else:
+            seen_before.append([cx, cy])
+            # I need to filter neighbors to exclude negative indices and
+            # indices that would throw IndexErrors (because those are getting caught
+            # hence no correct evaluations on the last row and column.
+            neighboring = [[cx+1, cy],
+                           [cx-1, cy],
+                           [cx, cy+1],
+                           [cx, cy-1]]
+            neighbors_to_check = []
+            for N in neighboring:
+                if N[0] < map_size[0] and N[1] < map_size[1]:
+                    if N[0] > 0 and N[1] > 0:
+                        neighbors_to_check.append(N)
+            # this bit should not be periodic...
+            are_different = [map_array[t[0], t[1]] != cn for t in neighbors_to_check]
+            if any(are_different):
+                output_array[cx, cy] = 1
+            for N in neighboring:
+                find_edge_recur(map_array, seen_before, output_array, N[0], N[1], cn)
+    except IndexError:
+        return
+
+
+# ----------- map fill
+def dummy_fill_map(map_array, cx, cy, cn, num_tiles):
+    """
+    Problem with this function:
+    num_tiles isn't the same across all nested recurrences.
+    """
+    ms = map_array.shape
+    neighbors = [[cx, cy+1], [cx, cy-1], [cx+1, cy], [cx-1, cy]]
+    while num_tiles > 0:
+        border_cells = [n for n in neighbors if 0 < n[0] < ms[0] and 0 < n[1] < ms[1]]
+        # np.random.choice(4) will evaluate as True for 1,2,3, but not for 0.
+        cells_to_set = [n for n in border_cells if np.random.choice(4)]  # 4 -> 75% odds
+        map_array[cx, cy] = 1
+        num_tiles -= 1
+        for cell in cells_to_set:
+            dummy_fill_map(map_array, cell[0], cell[1], cn, num_tiles)
+
+
+def dummy_fill_map(map_array, cx, cy, cn, num_tiles, odds=3):
+    """
+    For a given map and continent, mutates the map in place to build the continent.
+    :param map_array:
+    :param cx:
+    :param cy:
+    :param cn:
+    :return:
+    """
+    ms = map_array.shape
+    neighbors = [[cx, cy+1], [cx, cy-1], [cx+1, cy], [cx-1, cy]]
+    while num_tiles > 0:
+        border_cells = [n for n in neighbors if 0 < n[0] < ms[0] and 0 < n[1] < ms[1]]
+        cells_to_set = [n for n in border_cells if np.random.choice(odds)]
+        map_array[cx, cy] = cn
+        num_tiles -= 1
+        for cell in cells_to_set:
+            dummy_fill_map(map_array, cell[0], cell[1], cn, num_tiles)
+
+def build_bridge(map_array, point_a, point_b):
+    displacement = np.array(point_a) - np.array(point_b)
+    # negative X case
+    cursor = point_a[:]
+    if displacement[0] < -1:
+        while displacement[0] != -1:
+            cursor[0] += 1
+            map_array[cursor[0], cursor[1]] = -1
+            displacement += 1
+    # positive X case
+    elif displacement[0] > 1:
+        while displacement[0] != 1:
+            cursor[0] -= 1
+            map_array[cursor[0], cursor[1]] = -1
+            displacement -= 1
+    # negative Y case
+    if displacement[1] < -1:
+        while displacement[0] != -1:
+            cursor[1] += 1
+            map_array[cursor[0], cursor[1]] = -1
+            displacement += 1
+    # positive Y case
+    elif displacement[1] > 1:
+        while displacement[0] != 1:
+            cursor[0] -= 1
+            map_array[cursor[0], cur
